@@ -72,8 +72,8 @@ export default {
         if (!valid) return
         //登录发起请求
         const { data: res } = await this.$http.post('login', this.loginForm)
-        //console.log(res);
-        if (res.meta.status !== 200) return this.$message.error('登录失败')
+        console.log(res);
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         this.$message.success('登录成功')
 
         //登录成功后保存token 到sessionStorage中
