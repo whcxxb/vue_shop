@@ -11,7 +11,9 @@ import {
    Col, Table, 
    TableColumn, Switch,
    Pagination, Dialog, 
-   MessageBox,Tooltip
+   MessageBox,Tooltip,
+   Tag,Tree,
+   Select,Option
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Form)
@@ -36,6 +38,10 @@ Vue.use(Switch)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tooltip)
+Vue.use(Tag)
+Vue.use(Tree)
+Vue.use(Select)
+Vue.use(Option)
 
 
 //全局消息提示

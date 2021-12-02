@@ -31,7 +31,7 @@
         </el-form-item>
         <!-- 登录 -->
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="login" :loading="ISlogin">登录</el-button>
           <el-button type="info" @click="loginReset">重置</el-button>
         </el-form-item>
       </el-form>
@@ -44,6 +44,7 @@ export default {
   name: 'login',
   data() {
     return {
+      ISlogin:false,
       loginForm: {
         username: 'admin',
         password: '123456',
@@ -68,6 +69,7 @@ export default {
       this.$refs.loginFromRef.resetFields()
     },
     login() {
+      this.ISlogin = true
       this.$refs.loginFromRef.validate(async (valid) => {
         if (!valid) return
         //登录发起请求

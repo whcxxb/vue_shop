@@ -12,7 +12,8 @@
     <el-container>
       <!-- 左侧区域 -->
       <el-aside :width="asideWidth">
-        <div class="toggle-button" @click="toggle_button">|||</div>
+        <div class="toggle-button"  @click="toggle_button">|||</div>
+        <!-- 首页导航 -->
         <el-menu
           background-color="#333744"
           text-color="#fff"
@@ -69,6 +70,7 @@ export default {
     return {
       menuList: [],
       iconsObj: {
+        160: 'el-icon-magic-stick',
         125: 'el-icon-user',
         103: 'el-icon-s-platform',
         101: 'el-icon-shopping-bag-1',

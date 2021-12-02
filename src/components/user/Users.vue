@@ -3,9 +3,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
-
     <!-- 卡片视图 -->
     <el-card>
       <el-row :gutter="20">
@@ -73,12 +71,13 @@
               effect="dark"
               content="角色设置"
               placement="top"
-              :enterable='false'
+              :enterable="false"
             >
               <el-button
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="setRoles(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -155,6 +154,25 @@
         <el-button type="primary" @click="editUser()">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 分配角色的对话框 -->
+    <el-dialog title="分配权限" :visible.sync="setRolesDialog" width="50%">
+      <p>用户名:{{ this.userInfo.username }}</p>
+      <p>当前角色:{{ this.userInfo.role_name }}</p>
+      设置角色:<el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in this.rolesList"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id"
+        >
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRolesDialog = false">取 消</el-button>
+        <el-button type="primary" @click="addRolesDialog">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -228,6 +246,15 @@ export default {
           { validator: checkPhone, trigger: 'blur' },
         ],
       },
+
+      //分配角色的对话框是否显示
+      setRolesDialog: false,
+      //用户信息
+      userInfo: {},
+      //所有角色列表
+      rolesList: [],
+      //当前选中的角色
+      value: '',
     }
   },
   created() {
@@ -326,6 +353,26 @@ export default {
       if (res.meta.status !== 200) return this.$message.error(this.meta.msg)
       this.$message.success('删除成功')
       this.getUserList()
+    },
+
+    //分配角色
+    async setRoles(userInfo) {
+      this.value = ''
+      this.userInfo = userInfo
+      this.setRolesDialog = true
+      //获取所有角色
+      const { data: res } = await this.$http.get('roles')
+      this.rolesList = res.data
+      console.log(this.rolesList)
+    },
+
+    //点击确定分配角色
+    async addRolesDialog() {
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`,{rid: this.value,})
+      if(res.meta.status !==200) return this.$message.error('更新失败')
+      this.$message.success('角色更新成功')
+      this.getUserList()
+      this.setRolesDialog = false
     },
   },
 }
