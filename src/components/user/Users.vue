@@ -157,8 +157,8 @@
 
     <!-- 分配角色的对话框 -->
     <el-dialog title="分配权限" :visible.sync="setRolesDialog" width="50%">
-      <p>用户名:{{ this.userInfo.username }}</p>
-      <p>当前角色:{{ this.userInfo.role_name }}</p>
+      <p>用户名: <span class="pcs">{{ this.userInfo.username }}</span> </p>
+      <p>当前角色: <span class="pcs">{{ this.userInfo.role_name }}</span> </p>
       设置角色:<el-select v-model="value" placeholder="请选择">
         <el-option
           v-for="item in this.rolesList"
@@ -204,7 +204,7 @@ export default {
         //当前展示的第几页
         pagenum: 1,
         //每页显示多少条数据
-        pagesize: 3,
+        pagesize: 10,
       },
       userList: [],
       //用户总数量
@@ -368,8 +368,11 @@ export default {
 
     //点击确定分配角色
     async addRolesDialog() {
-      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`,{rid: this.value,})
-      if(res.meta.status !==200) return this.$message.error('更新失败')
+      const { data: res } = await this.$http.put(
+        `users/${this.userInfo.id}/role`,
+        { rid: this.value }
+      )
+      if (res.meta.status !== 200) return this.$message.error('更新失败')
       this.$message.success('角色更新成功')
       this.getUserList()
       this.setRolesDialog = false
@@ -378,5 +381,8 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style lang="less" scoped>
+ .pcs{
+   color: hotpink;
+ }
+</style>>

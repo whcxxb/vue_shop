@@ -76,7 +76,11 @@
         <el-table-column prop="roleDesc" label="角色描述"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit"
+            <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+              @click="editRole(scope.row)"
               >编辑</el-button
             >
             <el-button
@@ -123,6 +127,27 @@
       </span>
     </el-dialog>
 
+    <!-- 编辑角色对话框 -->
+    <el-dialog title="编辑角色" :visible.sync="editDialogVisible">
+      <el-form
+        :model="editRoleList"
+        :rules="addFormRules"
+        ref="editRolesForm"
+        label-width="100px"
+      >
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="editRoleList.roleName"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" prop="roleDesc">
+          <el-input v-model="editRoleList.roleDesc"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editRolesUser">确 定</el-button>
+      </span>
+    </el-dialog>
+
     <!-- 分配权限对话框 -->
     <el-dialog title="提示" :visible.sync="dialogRight" width="30%">
       <el-tree
@@ -151,6 +176,8 @@ export default {
       rolesList: [],
       //控制是否显示添加角色对话框
       addDialogVisible: false,
+      //编辑角色对话框
+      editDialogVisible: false,
       //分配权限对话框显示
       dialogRight: false,
       //保存所有权限
@@ -162,13 +189,15 @@ export default {
         children: 'children',
         label: 'authName',
       },
+      //编辑角色信息
+      editRoleList: {},
       //添加角色信息对象
       addRolesForm: {
         roleName: '',
         roleDesc: '',
       },
       //要添加的角色权限id
-      rolesId:'',
+      rolesId: '',
       //添加角色信息规则
       addFormRules: {
         rolesName: [
@@ -256,36 +285,59 @@ export default {
       const { data: res } = await this.$http.get('rights/tree')
       this.rightList = res.data
       console.log(this.rightList)
-      
+
       this.defKeys = []
       //获取三级节点的id
-      this.getLeafKeys(roles,this.defKeys)
+      this.getLeafKeys(roles, this.defKeys)
 
       this.dialogRight = true
     },
     //获取所有三级节点的id保存到dfKeys数组中
-    getLeafKeys(node,arr){
-      if(!node.children){
-       return arr.push(node.id)
+    getLeafKeys(node, arr) {
+      if (!node.children) {
+        return arr.push(node.id)
       }
       //通过递归 循环所有权限节点
-      node.children.forEach(item =>{
-        this.getLeafKeys(item,arr)
+      node.children.forEach((item) => {
+        this.getLeafKeys(item, arr)
       })
     },
     //点击确定 添加权限
-   async addRight(){
-       const keys = [
-         ...this.$refs.treeRef.getCheckedKeys(),
-         ...this.$refs.treeRef.getHalfCheckedKeys()
-       ]
-       const idStr = keys.join(',')
-     const {data:res} = await this.$http.post(`roles/${this.rolesId}/rights`,{rids:idStr})
-     if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
-     this.$message.success(res.meta.msg)
-     this.getRolesList()
-     this.dialogRight = false
-    }
+    async addRight() {
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys(),
+      ]
+      const idStr = keys.join(',')
+      const { data: res } = await this.$http.post(
+        `roles/${this.rolesId}/rights`,
+        { rids: idStr }
+      )
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getRolesList()
+      this.dialogRight = false
+    },
+    //编辑角色
+    editRole(roles) {
+      console.log(roles)
+      this.editRoleList = roles
+      this.editDialogVisible = true
+    },
+    //编辑角色提交
+    async editRolesUser() {
+      const { data: res } = await this.$http.put(
+        `roles/${this.editRoleList.id}`,
+        {
+          roleName: this.editRoleList.roleName,
+          roleDesc: this.editRoleList.roleDesc,
+        }
+      )
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success('编辑角色成功')
+      this.getRolesList()
+      this.editDialogVisible = false
+    },
   },
 }
 </script>
