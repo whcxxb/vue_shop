@@ -6,6 +6,7 @@ import './plugins/element.js'
 //导入全局样式表
 import "./assets/css/global.css"
 
+import ZkTable from 'vue-table-with-tree-grid'
 
 
 import axios from "axios"
@@ -20,6 +21,8 @@ axios.interceptors.request.use(config=>{
 })
 Vue.prototype.$http = axios
 
+
+Vue.component('tree-table', ZkTable)
 
 Vue.config.productionTip = false
 

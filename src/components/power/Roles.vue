@@ -217,7 +217,7 @@ export default {
     //获取所有角色
     async getRolesList() {
       const { data: res } = await this.$http.get('roles')
-      console.log(res)
+      //console.log(res)
       this.rolesList = res.data
     },
     //关闭添加角色对话框事件

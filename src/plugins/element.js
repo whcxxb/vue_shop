@@ -13,7 +13,10 @@ import {
    Pagination, Dialog, 
    MessageBox,Tooltip,
    Tag,Tree,
-   Select,Option
+   Select,Option,
+   Result,Cascader,
+   Notification,Popconfirm,
+   Popover
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Form)
@@ -42,10 +45,18 @@ Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Result)
+Vue.use(Cascader)
+Vue.use(Popconfirm)
+Vue.use(Popover)
 
 
 //全局消息提示
 Vue.prototype.$message = Message
 
+Vue.prototype.$notify = Notification
+
 //消息弹出
 Vue.prototype.$confirm = MessageBox.confirm
+
+
