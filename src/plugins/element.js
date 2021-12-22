@@ -16,7 +16,7 @@ import {
    Select,Option,
    Result,Cascader,
    Notification,Popconfirm,
-   Popover
+   Popover,Alert,Tabs,TabPane
 } from 'element-ui';
 Vue.use(Button)
 Vue.use(Form)
@@ -49,6 +49,9 @@ Vue.use(Result)
 Vue.use(Cascader)
 Vue.use(Popconfirm)
 Vue.use(Popover)
+Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 
 //全局消息提示
