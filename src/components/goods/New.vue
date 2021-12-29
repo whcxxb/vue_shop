@@ -3,6 +3,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/welcome' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/goods' }">商品列表</el-breadcrumb-item>
       <el-breadcrumb-item>添加商品</el-breadcrumb-item>
     </el-breadcrumb>
 
@@ -164,7 +165,7 @@ export default {
         Authorization: window.sessionStorage.getItem('token'),
       },
       imgPath: '',
-      imgdialogVisible: false,
+      imgdialogVisible: false
     }
   },
   created() {
@@ -202,7 +203,6 @@ export default {
             params: { sel: 'many' },
           }
         )
-        console.log(res.data)
         res.data.forEach((item) => {
           item.attr_vals = item.attr_vals.split(' ')
         })
@@ -229,14 +229,15 @@ export default {
       const fileIndex = this.addForm.pics.findIndex((x) => x.pic === filePath)
       this.addForm.pics.splice(fileIndex, 1)
     },
-    //图片添加
+    //图片上传
     handleSuccess(res) {
       const picInfo = {
-        pic: res.data.tmp_path.replace('\\','/')
+        pic: res.data.tmp_path
       }
       this.addForm.pics.push(picInfo)
-      console.log(this.addForm)
+      //console.log(this.addForm)
     },
+
     //添加商品
     addGoods() {
       this.$refs.addFormRef.validate(async (valid) => {
@@ -262,9 +263,10 @@ export default {
         const form = _.cloneDeep(this.addForm)
 
         form.goods_cat = form.goods_cat.join(',')
-        console.log(form);
-        const {data:res} = await this.$http.post('goods',form)
-        if(res.meta.status !== 201) return this.$message.error('添加失败')
+        console.log(form)
+        const { data: res } = await this.$http.post('goods', form)
+        if (res.meta.status !== 201) return this.$message.error('添加失败')
+        //console.log(form);
         this.$message.success('添加成功')
         this.$router.push('/goods')
       })

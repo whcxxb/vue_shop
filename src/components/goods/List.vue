@@ -55,6 +55,7 @@
               type="primary"
               icon="el-icon-edit"
               size="mini"
+              @click="editgoods(scope.row)"
             ></el-button>
             <el-button
               @click="delGoods(scope.row.goods_id)"
@@ -78,6 +79,46 @@
       >
       </el-pagination>
     </el-card>
+
+    <!-- 编辑商品 -->
+    <el-dialog @close="dialogClose" title="编辑商品" :visible.sync="editdialogVisible" width="50%">
+      <el-form
+        :model="editForm"
+        label-width="90px"
+        label-position="left"
+        ref="editFormRef"
+      >
+        <el-form-item label="商品名称">
+          <el-input v-model="editForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格">
+          <el-input type="number" v-model="editForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量">
+          <el-input v-model="editForm.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量">
+          <el-input v-model="editForm.goods_weight"></el-input>
+        </el-form-item>
+      </el-form>
+      <p>商品图片:</p>
+      <img :src="imgUrl" alt=""  width="100%" />
+      <el-upload
+        action="http://127.0.0.1:8888/api/private/v1/upload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-success="handleSuccess"
+        :headers="uploadHeader"
+        list-type="picture"
+        ref="uploadRef"
+      >
+        <el-button size="small" type="primary">更换图片</el-button>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editdialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveEditGoods">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -94,6 +135,25 @@ export default {
       goodsList: [],
       //总数量
       total: 0,
+      editdialogVisible: false,
+      editForm: {
+        goods_name: '',
+        goods_price: '0',
+        goods_number: '0',
+        goods_weight: '0',
+        pics: [],
+        goods_introduce: '',
+        attrs: [],
+        goods_cat: '',
+      },
+      //商品id
+      goodsId: null,
+      //商品图片地址
+      imgUrl: '',
+      //上传图片的头部
+      uploadHeader: {
+        Authorization: window.sessionStorage.getItem('token'),
+      },
     }
   },
   created() {
@@ -107,7 +167,7 @@ export default {
       if (res.meta.status !== 200) return this.$message.error('获取失败')
       this.goodsList = res.data.goods
       this.total = res.data.total
-      console.log(res)
+      //console.log(res)
     },
     //每页显示多少条数据发生改变时调用
     handleSizeChange(newSize) {
@@ -140,6 +200,50 @@ export default {
       this.$message.success('删除成功')
       this.getGoodsList()
     },
+    editgoods(row) {
+      // this.$router.push('/goods/editgoods')
+      this.editdialogVisible = true
+      this.editForm.goods_name = row.goods_name
+      this.editForm.goods_number = row.goods_number
+      this.editForm.goods_price = row.goods_price
+      this.editForm.goods_weight = row.goods_weight
+      this.goodsId = row.goods_id
+      this.getGoodsId()
+      console.log(this.editForm)
+    },
+    async saveEditGoods() {
+      const { data: res } = await this.$http.put(
+        `goods/${this.goodsId}`,
+        this.editForm
+      )
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success('编辑成功')
+      this.getGoodsList()
+      this.editdialogVisible = false
+    },
+    //获取当前商品的分类id
+    async getGoodsId() {
+      const { data: res } = await this.$http.get(`goods/${this.goodsId}`)
+      console.log(res)
+      this.editForm.goods_cat = res.data.goods_cat
+      this.imgUrl = res.data.pics[0].pics_big_url
+    },
+    handlePreview() {},
+    handleRemove() {},
+    handleSuccess(res) {
+      const picInfo = {
+        pic: res.data.tmp_path,
+      }
+      this.editForm.pics.push(picInfo) 
+
+      console.log(this.editForm);
+    },
+    clearFiles(){
+       this.$refs['uploadRef'].clearFiles();
+    },
+    dialogClose(){
+      this.clearFiles()
+    }
   },
 }
 </script>
