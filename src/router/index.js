@@ -10,11 +10,8 @@ import Categories from "../components/goods/Categories"
 import Params from "../components/goods/Params"
 import List from "../components/goods/List"
 import New from "../components/goods/New"
-<<<<<<< HEAD
 import EditGoods from "../components/goods/EditGoods"
-=======
 import Order from "../components/order/Order"
->>>>>>> order
 
 
 Vue.use(VueRouter)
@@ -63,13 +60,12 @@ const routes = [
         component:New
       },
       {
-<<<<<<< HEAD
         path:'/goods/editgoods',
-        component:EditGoods
-=======
+        component:EditGoods 
+      },
+      {
         path:'/orders',
         component:Order
->>>>>>> order
       },
     ]
   }
