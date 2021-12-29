@@ -1,18 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from "../components/Login"
-import Home from "../components/Home"
-import Welcome from "../components/Welcome"
-import Users from "../components/user/Users"
-import Rights from "../components/power/Rights"
-import Roles from "../components/power/Roles"
-import Categories from "../components/goods/Categories"
-import Params from "../components/goods/Params"
-import List from "../components/goods/List"
-import New from "../components/goods/New"
-import EditGoods from "../components/goods/EditGoods"
-import Order from "../components/order/Order"
-import Report from "../components/report/Report"
+
+const Login = () => import(/* webpackChunkName: "login_home_welome" */ '../components/Login')
+const Home = () => import(/* webpackChunkName: "login_home_welome" */ '../components/Home')
+const Welcome = () => import(/* webpackChunkName: "login_home_welome" */ '../components/Welcome')
+
+const Users = () => import(/* webpackChunkName: "User" */ '../components/user/Users')
+
+const Rights = () => import(/* webpackChunkName: "power" */ '../components/power/Rights')
+const Roles = () => import(/* webpackChunkName: "power" */ '../components/power/Roles')
+
+const Categories = () => import(/* webpackChunkName: "goods" */ '../components/goods/Categories')
+const Params = () => import(/* webpackChunkName: "goods" */ '../components/goods/Params')
+const List = () => import(/* webpackChunkName: "goods" */ '../components/goods/List')
+const New = () => import(/* webpackChunkName: "goods" */ '../components/goods/New')
+
+
+const Order = () => import(/* webpackChunkName: "order" */ '../components/order/Order')
+const Report = () => import(/* webpackChunkName: "report" */ '../components/report/Report')
+
 
 
 Vue.use(VueRouter)
@@ -59,10 +65,6 @@ const routes = [
       {
         path:'/goods/new',
         component:New
-      },
-      {
-        path:'/goods/editgoods',
-        component:EditGoods 
       },
       {
         path:'/orders',
