@@ -74,6 +74,7 @@
               class="paramsTag"
               v-for="(item, index) in scope.row.attr_vals"
               :key="index"
+              v-show="item !=[]"
               >{{ item }}</el-tag
             >
             <el-input
@@ -242,7 +243,7 @@ export default {
         }
       )
       res.data.forEach((item) => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
+        item.attr_vals = item.attr_vals.split(' ')
         //动态控制文本框的显示与隐藏
         this.$set(item, 'inputVisible', false)
         //文本框的输入
