@@ -1,4 +1,4 @@
-# vue_shop
+# Vue2+Elementui
 
 ## Project setup
 ```
